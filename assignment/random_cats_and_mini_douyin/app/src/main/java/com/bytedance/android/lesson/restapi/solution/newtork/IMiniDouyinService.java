@@ -29,6 +29,15 @@ public interface IMiniDouyinService {
     //    "success": true
     //}
 
+    String HOST = "http://test.androidcamp.bytedance.com/";
+    @Multipart
+    @POST("/mini_douyin/invoke/video")
+    Call<PostVideoResponse> CreateVideo(
+        @Query("student_id")String student_ID,
+        @Query("user_id")String userName,
+        @Part MultipartBody.Part image,@Part MultipartBody.Part video);
+
+
     // TODO-C2 (8) Implement your MiniDouyin Feed Request here, url: (GET) http://test.androidcamp.bytedance.com/mini_douyin/invoke/video
     // response
     // {
@@ -50,4 +59,6 @@ public interface IMiniDouyinService {
     //    ],
     //    "success":true
     //}
+    @GET("/mini_douyin/invoke/video")
+    Call<FeedResponse> fetchFeed();//刷新是用的FeedResponse
 }

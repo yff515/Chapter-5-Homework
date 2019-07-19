@@ -12,9 +12,14 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bytedance.android.lesson.restapi.solution.bean.Cat;
+import com.bytedance.android.lesson.restapi.solution.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.support.v7.widget.RecyclerView.Adapter;
 import static android.support.v7.widget.RecyclerView.ViewHolder;
@@ -25,6 +30,7 @@ public class Solution2C1Activity extends AppCompatActivity {
     public Button mBtn;
     public RecyclerView mRv;
     private List<Cat> mCats = new ArrayList<>();
+    private List<Call> mCalllists = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +53,8 @@ public class Solution2C1Activity extends AppCompatActivity {
                 ImageView iv = (ImageView) viewHolder.itemView;
 
                 // TODO-C1 (4) Uncomment these 2 lines, assign image url of Cat to this url variable
-//                String url = mCats.get(i).;
-//                Glide.with(iv.getContext()).load(url).into(iv);
+              String url = mCats.get(i).getUrl();
+                Glide.with(iv.getContext()).load(url).into(iv);
             }
 
             @Override public int getItemCount() {
@@ -68,8 +74,28 @@ public class Solution2C1Activity extends AppCompatActivity {
         mBtn.setEnabled(false);
 
         // TODO-C1 (3) Send request for 5 random cats here, don't forget to use {@link retrofit2.Call#enqueue}
+
         // Call restoreBtn() and loadPics(response.body()) if success
         // Call restoreBtn() if failure
+
+            Call<List<Cat>> CatCall = NetworkUtils.getResponseWithRetrofitAsync();
+            mCalllists.add (CatCall);
+            CatCall.enqueue(new Callback<List<Cat>>() {
+             @Override
+             public void onResponse(Call<List<Cat>> call, Response<List<Cat>> response) {
+               //mTv.setText(response.body().getValue().getJoke());
+                 restoreBtn();
+                 loadPics(response.body());
+                 //System.out.println(url);
+               mCalllists.remove(call);
+           }
+//
+            @Override
+            public void onFailure(Call<List<Cat>> call, Throwable t) {
+                mCalllists.remove(call);
+                System.out.println("failed");
+            }
+        });
 
     }
 

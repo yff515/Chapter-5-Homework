@@ -1,5 +1,6 @@
 package com.bytedance.android.lesson.restapi.restapi;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mTv = findViewById(R.id.tv);
         mBtn = findViewById(R.id.btn);
-//        mTv.setText(parseFirstNameWithJSON()); // json test
+        mTv.setText(parseFirstNameWithJSON()); // json test 在底下写好了
 //        mTv.setText(parseFirstNameWithGson()); // json test
         initListeners();
     }
@@ -74,4 +75,5 @@ public class MainActivity extends AppCompatActivity {
 //        Joke j = NetworkUtils.getResponseWithRetrofit();
 //        mTv.setText(j.getValue().getJoke());
     }
+
 }

@@ -1,10 +1,9 @@
-package com.bytedance.android.lesson.restapi.solution.utils;
+package com.bytedance.android.lesson.restapi.restapi.utils;
 
+import android.util.Log;
 
-import com.bytedance.android.lesson.restapi.solution.bean.Cat;
-import com.bytedance.android.lesson.restapi.solution.bean.FeedResponse;
-import com.bytedance.android.lesson.restapi.solution.newtork.ICatService;
-import com.bytedance.android.lesson.restapi.solution.newtork.IMiniDouyinService;
+import com.bytedance.android.lesson.restapi.restapi.bean.Joke;
+import com.bytedance.android.lesson.restapi.restapi.newtork.ICNDBService;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -13,7 +12,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.Scanner;
 
 import retrofit2.Call;
@@ -26,7 +24,32 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @author Xavier.S
  * @date 2019.01.15 13:27
  */
-public class NetworkUtils {
+    public class NetworkUtils2 {
+
+    public static Joke getResponseWithRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.icndb.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Response<Joke> response = null;
+        try {
+            response = retrofit.create(ICNDBService.class).randomJoke().
+                    execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return response == null ? null : response.body();
+    }
+
+    public static Call<Joke> getResponseWithRetrofitAsync() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.icndb.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(ICNDBService.class).randomJoke();
+    }
 
     public static String getResponseWithHttpURLConnection(String url) {
         String result = null;
@@ -74,39 +97,5 @@ public class NetworkUtils {
             e.printStackTrace();
         }
         return result.toString();
-    }
-
-    public static List<Cat> getResponseWithRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.icndb.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        Response<List<Cat>> response = null;
-        try {
-            response = retrofit.create(ICatService.class).randomCat().
-                    execute();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return response == null ? null : response.body();
-    }
-
-    public static Call<List<Cat>> getResponseWithRetrofitAsync() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.thecatapi.com/v1/images/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        return retrofit.create(ICatService.class).randomCat();
-    }
-
-    public static Call<FeedResponse> getResponseWithRetrofitAsync2() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://test.androidcamp.bytedance.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        return retrofit.create(IMiniDouyinService.class).fetchFeed();
     }
 }
